@@ -1,0 +1,2 @@
+# minesweeper
+Minesweeper ruby implementation
