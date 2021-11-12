@@ -2,16 +2,32 @@
 
 # Holds cell infomrations and actions
 class Cell
-  attr_accessor :position_x, :position_y, :value
+  attr_accessor :position_x, :position_y, :value, :state
 
   def initialize(position_x, position_y)
     @position_x = position_x
     @position_y = position_y
     @value = 0
+    @state = false
   end
 
   def mine?
     value == '*'
+  end
+
+  def empty?
+    !mine? && value.zero?
+  end
+
+  def display
+    case(state)
+      when false
+        '[ ]'
+      when 'opened'
+        empty? ? '   ' : "[#{value}]"
+      when 'flagged'
+        '[F]'
+      end
   end
 
   def find_neighbor_positions

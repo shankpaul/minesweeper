@@ -27,7 +27,7 @@ class Grid
     end
   end
 
-  def mask_grid
+  def place_mine_count_to_cells
     cells.each do |cell|
       next if cell.mine?
 
