@@ -8,6 +8,14 @@ ruby start_game.rb
 
 ```
 
+## Run Test
+
+```shell
+bunde install
+rspec ./
+
+```
+
 ## How to play
 ```shell
     0  1  2  3  4 
