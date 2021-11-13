@@ -18,7 +18,7 @@ ruby start_game.rb
 3  [ ][ ][ ][ ][ ]
 4  [ ][ ][ ][ ][ ]
 
-score: 10
+score: 0
 
 Game Help
 ----------
