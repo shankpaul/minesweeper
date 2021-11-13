@@ -37,7 +37,7 @@ class Minesweeper
       end
       print cell.display
     end
-    puts "\n\nscore: #{score}"
+    puts "\n\nScore: #{score}"
   end
 
   def display_data
@@ -56,8 +56,8 @@ class Minesweeper
   end
 
   def print_help
-    puts "\n Game Help"
-    puts '-----------'
+    puts "\nGame Help"
+    puts '----------'
     puts 'Use row column combination for select a cell'
     puts 'Open a cell: <rowcolumn>  Eg: 00'
     puts 'Flag a cell: <rowcolumn>f  Eg: 00f'
