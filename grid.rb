@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'cell'
+require_relative 'cell_error'
 
 # Manage entire grid and cells
 class Grid
@@ -35,18 +36,53 @@ class Grid
     end
   end
 
+  def open_cell(position_x, position_y)
+    cell = find_cell(position_x, position_y)
+    raise CellError, 'Invalid Cell' if cell.nil?
+
+    return unless cell.open
+
+    open_other_mines(cell) if cell.mine?
+    open_other_empty_neighbours(cell) if cell.empty?
+  end
+
+  def flag_cell(position_x, position_y)
+    cell = find_cell(position_x, position_y)
+    raise CellError, 'Invalid Cell' if cell.nil?
+
+    cell.flag
+  end
+
   private
+
+  def open_other_empty_neighbours(cell)
+    neighbour_cells(cell).each do |neighbour|
+      neighbour.open if neighbour.empty?
+    end
+  end
+
+  def open_other_mines(cell)
+    neighbour_cells(cell).select(&:mine?).map(&:open)
+  end
 
   def find_cell(cell_x, cell_y)
     cells.select { |cell| cell.position_x == cell_x && cell.position_y == cell_y }.first
   end
 
   def update_near_mine_count(cell)
-    cell.find_neighbor_positions.each do |position|
-      neighbor = find_cell(position[:cell_x], position[:cell_y])
-      next if neighbor.nil?
-
-      cell.value = cell.value + 1 if neighbor.mine?
+    neighbour_cells(cell).each do |neighbour|
+      cell.value = cell.value + 1 if neighbour.mine?
     end
+  end
+
+  def neighbour_cells(cell)
+    neighbours = []
+    cell.find_neighbour_positions.each do |position|
+      neighbour = find_cell(position[:cell_x], position[:cell_y])
+      next if neighbour.nil?
+
+      neighbours << neighbour
+    end
+    neighbours
   end
 end

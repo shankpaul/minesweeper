@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
-# Holds cell infomrations and actions
+# Manage cell infomrations and actions
 class Cell
-  attr_accessor :position_x, :position_y, :value, :state
+  attr_accessor :position_x, :position_y, :value, :flagged, :opened, :exploded
 
   def initialize(position_x, position_y)
     @position_x = position_x
     @position_y = position_y
     @value = 0
-    @state = false
+    @flagged = false
+    @opened = false
+    @exploded = false
   end
 
   def mine?
@@ -19,34 +21,52 @@ class Cell
     !mine? && value.zero?
   end
 
-  def display
-    case(state)
-      when false
-        '[ ]'
-      when 'opened'
-        empty? ? '   ' : "[#{value}]"
-      when 'flagged'
-        '[F]'
-      end
+  def flagged?
+    @flagged
   end
 
-  def find_neighbor_positions
+  def opened?
+    @opened
+  end
+
+  def exploded?
+    @exploded
+  end
+
+  def display
+    return '[ ]' if !opened? && !flagged?
+    return '[F]' if flagged?
+    return empty? ? '   ' : "[#{value}]" if opened?
+  end
+
+  def find_neighbour_positions
     positions = []
-    neighbor_x_positions.each do |neighbor_x|
-      neighbor_y_positions.each do |neighbor_y|
-        positions << { cell_x: neighbor_x, cell_y: neighbor_y }
+    neighbour_x_positions.each do |neighbour_x|
+      neighbour_y_positions.each do |neighbour_y|
+        positions << { cell_x: neighbour_x, cell_y: neighbour_y }
       end
     end
     positions
   end
 
+  def open
+    return false if flagged? || opened?
+
+    @exploded = true if mine?
+    @opened = true
+  end
+
+  def flag
+    @flagged = true
+  end
+
   private
 
-  def neighbor_x_positions
+  def neighbour_x_positions
     (position_x - 1)..(position_x + 1)
   end
 
-  def neighbor_y_positions
+  def neighbour_y_positions
     (position_y - 1)..(position_y + 1)
   end
 end
