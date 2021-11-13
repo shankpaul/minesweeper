@@ -40,13 +40,6 @@ class Minesweeper
     puts "\n\nScore: #{score}"
   end
 
-  def display_data
-    grid.cells.each_with_index do |cell, index|
-      puts "\n" if (index % grid.width).zero?
-      print cell.display
-    end
-  end
-
   def click_cell_at(position)
     if position.to_s.downcase.include?('f')
       grid.flag_cell(*separate_x_y_positions(position))
@@ -93,7 +86,7 @@ class Minesweeper
   end
 
   def won?
-    grid.cells.all? { |cell| !cell.empty? && cell.opened? }
+    grid.non_mine_cells.all?(&:opened?)
   end
 
   def lose?
@@ -109,9 +102,5 @@ class Minesweeper
     header = '   '
     grid.width.times { |c| header += " #{c} " }
     print "#{header}\n"
-  end
-
-  def update_points
-    @points += 10
   end
 end

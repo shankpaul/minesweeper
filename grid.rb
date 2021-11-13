@@ -21,9 +21,10 @@ class Grid
     end
   end
 
-  def place_mines(mines)
-    mines.times do
-      cell = cells[rand(cells.count)]
+  def place_mines(mine_count)
+    indexes = [*0..cells.count-1].shuffle
+    indexes.sample(mine_count).each do |index|
+      cell = cells[index]
       cell.value = '*'
     end
   end
@@ -53,6 +54,10 @@ class Grid
     cell.flag
   end
 
+  def non_mine_cells
+    cells.select {|cell| !cell.mine? }
+  end
+
   private
 
   def open_other_empty_neighbours(cell)
@@ -62,7 +67,7 @@ class Grid
   end
 
   def open_other_mines(cell)
-    neighbour_cells(cell).select(&:mine?).map(&:open)
+    cells.select(&:mine?).map(&:open)
   end
 
   def find_cell(cell_x, cell_y)
